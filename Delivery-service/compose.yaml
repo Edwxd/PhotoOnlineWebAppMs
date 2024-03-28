@@ -1,0 +1,47 @@
+services:
+  delivery-service:
+    #    build: employees-service
+    build: .
+    hostname: delivery-service
+    ports:
+      - "7003:7003"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    depends_on:
+      mysql3:
+        condition: service_healthy
+
+  mysql3:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=delivery-db'
+      - 'MYSQL_USER=user'
+      - 'MYSQL_PASSWORD=secretpwd'
+      - 'MYSQL_ROOT_PASSWORD=verysecretpwd'
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-uuser",
+          "-psecretpwd",
+          "-h",
+          "localhost",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    container_name: PhpMyAdmin
+    links:
+      - mysql3
+    restart: always
+    ports:
+      - 5013:80
+    environment:
+      - PMA_ARBITRARY=1
