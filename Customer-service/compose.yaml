@@ -1,10 +1,47 @@
 services:
-  mysql:
+  customer-service:
+    #    build: employees-service
+    build: .
+    hostname: customer-service
+    ports:
+      - "7002:7002"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    depends_on:
+      mysql3:
+        condition: service_healthy
+
+  mysql3:
     image: 'mysql:latest'
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
-      - 'MYSQL_PASSWORD=secret'
-      - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      - 'MYSQL_DATABASE=customer-db'
+      - 'MYSQL_USER=user'
+      - 'MYSQL_PASSWORD=secretpwd'
+      - 'MYSQL_ROOT_PASSWORD=verysecretpwd'
     ports:
-      - '3306'
+      - "3307:3306"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-uuser",
+          "-psecretpwd",
+          "-h",
+          "localhost",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    container_name: PhpMyAdmin
+    links:
+      - mysql3
+    restart: always
+    ports:
+      - 5013:80
+    environment:
+      - PMA_ARBITRARY=1
