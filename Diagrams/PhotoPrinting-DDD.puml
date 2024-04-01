@@ -1,0 +1,248 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+hide circle
+top to bottom direction
+!define ENTITY(entityName) class entityName <<Entity>>
+!define AGGREGATE(aggregateName) class aggregateName <<Aggregate>>
+!define AGGREGATE_ROOT(aggregateRootName) class aggregateRootName <<Aggregate Root>>
+!define AGGREGATE_Root_ENTITY(aggregateRootEntityName) class aggregateRootEntityName <<Aggregate Root>> << Entity >>
+!define VALUE_OBJECT(valueObjectName) class valueObjectName <<Value Object>>
+
+
+!pragma userVerticalIf on
+skinparam dpi 350
+skinparam packageStyle rectangle
+skinparam rectangle{
+
+    Background #f7f4eb
+    BorderColor Black
+
+}
+
+rectangle "Photo Online Printing Store" as BoundedContextPhotoOnlinePrinting #line.dashed{
+
+    Package "Photo Management Subdomain" <<Rectangle>> #lavender{
+
+        AGGREGATE_Root_ENTITY(Photo) #LightCyan{
+            + dimension : String
+            + String: color
+            + copies: Integer
+            + framing: String
+            + gift_wrap: Boolean
+        }
+
+        VALUE_OBJECT(PhotoIdentifier) #LightCyan{
+            + photoId: UUID
+        }
+
+        Photo "1" o--> "1" PhotoIdentifier
+    }
+
+
+    Package "Customer Management Subdomain" <<Rectangle>> #lavender{
+
+        AGGREGATE_Root_ENTITY(Customer) #LightCyan{
+           + firstName: String
+           + lastName: String
+           + email: String
+           + phoneNumberInformation: PhoneNumberInformation
+           + addressInformation: AddressInformation
+        }
+
+        VALUE_OBJECT(CustomerIdentifier) #LightCyan{
+           + customerId: UUID
+        }
+
+        VALUE_OBJECT(PhoneNumberInformation) #LightCyan{
+            + type: String
+            + number: string
+        }
+
+        VALUE_OBJECT(AddressInformation) #LightCyan{
+                    + streetAddress: String
+                    + city: String
+                    + state: String
+                    + country: String
+                    + postalCode: String
+        }
+
+        Customer "1" o--> "1" CustomerIdentifier
+        Customer "1" o--> "1..*" PhoneNumberInformation
+        Customer "1" o--> "1..*" AddressInformation
+
+}
+
+     Package "Delivery Management Subdomain" <<Rectangle>> #lavender{
+
+            AGGREGATE_Root_ENTITY(Delivery) #LightCyan{
+               + ArrivalInformation: arrivalInformation
+               + company: String
+               + deliveryInstructions: String
+            }
+
+            VALUE_OBJECT(DeliveryIdentifier) #LightCyan{
+               + deliveryId: UUID
+            }
+
+            VALUE_OBJECT(ArrivalInformation) #LightCyan{
+                + date: String
+                + time: String
+            }
+
+        Delivery "1" o--> "1" DeliveryIdentifier
+        Delivery "1" o--> "1" ArrivalInformation
+
+}
+
+  Package "Purchase Management Subdomain" <<Rectangle>> #lavender{
+
+  note "Invariant: when a purchase is canceled, it stays in the list of purchases but the status of the purchase is changed ex: the purchase status is set as 'Canceled' " as purchaseInvariant
+
+            AGGREGATE_Root_ENTITY(Purchase) #LightCyan{
+               + totalCost: TotalCost
+               + typeOfPayment: String
+               + status: String
+
+            }
+
+            VALUE_OBJECT(PurchaseIdentifier) #LightCyan{
+               + purchaseId: UUID
+            }
+
+            VALUE_OBJECT(TotalCost) #LightCyan{
+                + SubTotal: String
+                + Total: String
+            }
+
+
+        Purchase "1" o--> "1" PurchaseIdentifier
+        Purchase "1" o--> "1" TotalCost
+
+        PhotoIdentifier "1" o--> "1" Purchase
+        CustomerIdentifier "1" o--> "1" Purchase
+        DeliveryIdentifier "1" o--> "1" Purchase
+
+
+
+    }
+
+
+     Package "Delivery warehouse Management Subdomain" <<Rectangle>> #grey{
+
+
+                AGGREGATE_Root_ENTITY(Warehouse) #slategrey{
+                   + location : WarehouseLocationInformation
+                   + company: String
+                   + printingFacilityOrderPickupSchedule: Schedule
+
+                }
+
+                VALUE_OBJECT(WarehouseIdentifier) #slategrey{
+                   + wareHouseId: UUID
+                }
+
+                VALUE_OBJECT(WarehouseLocationInformation) #slategrey{
+                    + country: String
+                    + state: String
+                    + streetAddress : String
+
+                }
+
+                VALUE_OBJECT(Schedule) #slategrey{
+                    + orderPickUpDate: LocalDate
+                    + orderPickUpTime: LocalTime
+
+                }
+
+
+            Warehouse "1" o--> "1" WarehouseIdentifier
+            Warehouse "1" o--> "1" WarehouseLocationInformation
+            Warehouse "1" o--> "1"Schedule
+            WarehouseIdentifier "..*" o--> "..*" DeliveryIdentifier
+
+        }
+
+Package "Printing facility Management Subdomain" <<Rectangle>> #grey{
+
+
+                AGGREGATE_Root_ENTITY(Facility) #slategrey{
+                   + location : LocationInformation
+                   + material: : Material
+                   + name: : String
+
+                }
+
+                VALUE_OBJECT(FacilityIdentifier) #slategrey{
+                   + facilityId: UUID
+                }
+
+                VALUE_OBJECT(FacilityLocationInformation) #slategrey{
+                    + country: String
+                    + state: String
+                    + streetAddress : String
+
+                }
+
+                VALUE_OBJECT(Material) #slategrey{
+                    + type: String
+                    + status: String
+                    + quantity : String
+                    + nextStockDelivery: String
+
+                }
+
+
+            Facility "1" o--> "1" FacilityIdentifier
+            Facility "1" o--> "1" FacilityLocationInformation
+            Facility "1" o--> "1..*" Material
+            FacilityIdentifier "1" o--> "1..*" WarehouseIdentifier
+            FacilityIdentifier "1" o--> "1..*" PurchaseIdentifier
+
+        }
+
+
+        Package "Supplier Management Subdomain" <<Rectangle>> #grey{
+
+
+                        AGGREGATE_Root_ENTITY(Supplier) #slategrey{
+                           + location : LocationInformation
+                           + schedule: : ScheduleInformation
+                           + name: : String
+                           + supplierMaterial : SupplierMaterial
+
+                        }
+
+                        VALUE_OBJECT(SupplierIdentifier) #slategrey{
+                           + supplierId: UUID
+                        }
+
+                        VALUE_OBJECT(SupplierLocationInformation) #slategrey{
+                            + country: String
+                            + state: String
+                            + streetAddress : String
+
+                        }
+
+                        VALUE_OBJECT(ScheduleInformation) #slategrey{
+                            + dateOfDropOff : LocalDate
+                            + TimeOfDropOff : LocalTime
+                            + status: String
+
+                        }
+
+                        VALUE_OBJECT(SupplierMaterial) #slategrey{
+                            + type: String
+                            + status: String
+                            + quantity : String
+                    }
+
+                     Supplier "1" o--> "1" SupplierIdentifier
+                     Supplier "1" o--> "1" SupplierLocationInformation
+                     Supplier "1" o--> "1..*" SupplierMaterial
+                     Supplier "1" o--> "1..*" ScheduleInformation
+                     SupplierIdentifier "1..*" o--> "1..*" FacilityIdentifier
+                    }
+}
+
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Context.puml
+
+title System Context diagram for photo online printing store
+
+Person(customer, "Customer", "A Customer of the photo online printing store")
+System(photoonlineprintingwebstore_system, "Photo Online printing web store", "Allows customer to print photo with their own personal customization")
+
+Rel(customer, photoonlineprintingwebstore_system, "Brows for personal customization and order photos using")
+@enduml

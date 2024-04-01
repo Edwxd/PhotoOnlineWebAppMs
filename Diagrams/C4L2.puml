@@ -1,0 +1,54 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Container.puml
+
+' LAYOUT_TOP_DOWN()
+' LAYOUT_AS_SKETCH()
+
+LAYOUT_WITH_LEGEND()
+SHOW_PERSON_OUTLINE()
+
+AddElementTag("microservice", $shape=EightSidedShape(), $bgColor="CornflowerBlue", $fontColor="white", $legendText="micro service\neight sided")
+AddElementTag("storage", $shape=RoundedBoxShape(), $bgColor="lightSkyBlue", $fontColor="white")
+title System Context diagram for photo online printing store
+
+Person(customer, "Customer", "A Customer of the photo online printing store")
+
+System_Boundary(c1, "Photo Online printing web store") {
+  Container(web_app, "Web Application", "Java, Spring MVC", "Delivers the static content and the photo online printing store single page application.")
+  Container(spa, "Single-Page Application", "JavaScript, React", "Provides all the photo online printing store functionalities via the web browser.")
+  Container(api_gateway, "API-Gateway", "Java, Docker Container", "Provides photo online printing store functionalities functionality via API.")
+  Container(purchase_service, "purchase-service", "Java, Docker Container", "Provides Internet purchases functionality using the aggregator pattern via API.")
+  Container(customer_service, "customer-service", "Java, Docker Container", "Provides Internet customer functionality via API.")
+  Container(photo_service, "photo-service", "Java, Docker Container", "Provides photo Internet functionality via API.")
+  Container(delivery_service, "delivery-service", "Java, Docker Container", "Provides Internet delivery functionality via API.")
+  ContainerDb(customer_db, "Customers_DB", "MySQL", "Stores customer information.", $tags = "storage")
+  ContainerDb(delivery_db, "Delivery_DB", "MySQL", "Stores delivery information.", $tags = "storage")
+  ContainerDb(photo_db, "Photo_DB", "MySQL", "Stores photo information.", $tags = "storage")
+  ContainerDb(purchase_db, "Purchase_DB", "MySQL", "Stores purchase information.", $tags = "storage")
+}
+Rel_Neighbor(web_app, spa, "Delivers")
+Rel(spa, api_gateway, "Uses", "async", JSON/HTTPS")
+
+/'Connection between the customer and the web app'/
+Rel(customer, web_app, "Uses", "HTTPS")
+Rel(customer, spa, "Uses", "HTTPS")
+
+/'Connection between the APi-gateway and the services'/
+Rel(api_gateway, photo_service, "Uses", "HTTPS")
+Rel(api_gateway, customer_service, "Uses", "HTTPS")
+Rel(api_gateway, delivery_service, "Uses", "HTTPS")
+Rel(api_gateway, purchase_service, "Uses", "HTTPS")
+
+/'Connection between the services and their own Database'/
+Rel_D(purchase_service, purchase_db, "reads ...", "JDBC/SQL/TCP")
+Rel_D(customer_service, customer_db, "reads ...", "JDBC/SQL/TCP")
+Rel_D(photo_service, photo_db, "reads ...", "JDBC/SQL/TCP")
+Rel_D(delivery_service, delivery_db, "reads ...", "JDBC/SQL/TCP")
+
+/'Connection between the aggregate service and the supportive services'/
+Rel(purchase_service, customer_service, "Uses", "HTTPS")
+Rel(purchase_service, delivery_service, "Uses", "HTTPS")
+Rel(purchase_service, photo_service, "Uses", "HTTPS")
+@enduml
