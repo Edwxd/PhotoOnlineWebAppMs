@@ -24,7 +24,7 @@ spring:
         hikari:
             initializationFailTimeout: 60000
         password: secretpwd
-        url: jdbc:mysql://mysql3/customer-db
+        url: jdbc:mysql://mysql2/customer-db
         username: user
     jpa:
         hibernate:
@@ -37,22 +37,6 @@ spring:
 ---
 
 
-logging:
-    level:
-        com:
-            customer-service: DEBUG
-        org:
-            hibernate:
-                SQL: DEBUG
-                type:
-                    descriptor:
-                        sql:
-                            BasicBinder: TRACE
-        root: INFO
-server:
-    error:
-        include-message: always
-    port: 7002
 spring:
     application:
         name: customer-service

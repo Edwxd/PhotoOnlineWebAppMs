@@ -8,10 +8,10 @@ services:
     environment:
       - "SPRING_PROFILES_ACTIVE=docker"
     depends_on:
-      mysql3:
+      mysql2:
         condition: service_healthy
 
-  mysql3:
+  mysql2:
     image: 'mysql:latest'
     environment:
       - 'MYSQL_DATABASE=customer-db'
@@ -19,7 +19,7 @@ services:
       - 'MYSQL_PASSWORD=secretpwd'
       - 'MYSQL_ROOT_PASSWORD=verysecretpwd'
     ports:
-      - "3308:3308"
+      - "3302:3302"
     healthcheck:
       test:
         [
@@ -35,13 +35,3 @@ services:
       timeout: 5s
       retries: 10
 
-  phpmyadmin:
-    image: phpmyadmin:5.2.0
-    container_name: PhpMyAdmin
-    links:
-      - mysql3
-    restart: always
-    ports:
-      - 5013:80
-    environment:
-      - PMA_ARBITRARY=1

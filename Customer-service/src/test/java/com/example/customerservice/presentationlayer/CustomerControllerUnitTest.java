@@ -1,7 +1,9 @@
 package com.example.customerservice.presentationlayer;
 
 import com.example.customerservice.busnesslayer.CustomerService;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,4 +42,8 @@ public class CustomerControllerUnitTest {
         assertArrayEquals(customerResponseEntity.getBody().toArray(), new ArrayList<CustomerResponseModel>().toArray());
         verify(customerService, times(1)).getAllCustomers();
     }
+
+
+
+
 }

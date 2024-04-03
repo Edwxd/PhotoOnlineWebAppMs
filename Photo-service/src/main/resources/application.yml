@@ -24,7 +24,7 @@ spring:
         hikari:
             initializationFailTimeout: 60000
         password: secretpwd
-        url: jdbc:mysql://mysql3/photo-db
+        url: jdbc:mysql://mysql1/photo-db
         username: user
     jpa:
         hibernate:
