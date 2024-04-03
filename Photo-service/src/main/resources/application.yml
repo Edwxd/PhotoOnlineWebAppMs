@@ -1,0 +1,83 @@
+logging:
+    level:
+        com:
+            photo-service: DEBUG
+        org:
+            hibernate:
+                SQL: DEBUG
+                type:
+                    descriptor:
+                        sql:
+                            BasicBinder: TRACE
+        root: INFO
+server:
+    error:
+        include-message: always
+    port: 7001
+spring:
+    application:
+        name: photo-service
+    config:
+        activate:
+            on-profile: docker
+    datasource:
+        hikari:
+            initializationFailTimeout: 60000
+        password: secretpwd
+        url: jdbc:mysql://mysql3/photo-db
+        username: user
+    jpa:
+        hibernate:
+            ddl-auto: none
+    sql:
+        init:
+            mode: always
+            platform: mysql
+
+---
+
+
+logging:
+    level:
+        com:
+            photo-service: DEBUG
+        org:
+            hibernate:
+                SQL: DEBUG
+                type:
+                    descriptor:
+                        sql:
+                            BasicBinder: TRACE
+        root: INFO
+server:
+    error:
+        include-message: always
+    port: 7001
+spring:
+    application:
+        name: photo-service
+    config:
+        activate:
+            on-profile: h2
+    datasource:
+        driver-class-name: org.h2.Driver
+        hikari:
+            initializationFailTimeout: 60000
+        password: 'null'
+        url: jdbc:h2:mem:photo-db;DB_CLOSE_DELAY=-1
+        username: sa
+    h2:
+        console:
+            enabled: true
+    jpa:
+        hibernate:
+            ddl-auto: create
+        properties:
+            hibernate:
+                auto-quote-keyword: true
+                dialect: org.hibernate.dialect.H2Dialect
+        show-sql: true
+    sql:
+        init:
+            mode: always
+            platform: h2

@@ -1,0 +1,47 @@
+services:
+  photo-service:
+    #    build: employees-service
+    build: .
+    hostname: photo-service
+    ports:
+      - "7001:7001"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker"
+    depends_on:
+      mysql3:
+        condition: service_healthy
+
+  mysql3:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=photo-db'
+      - 'MYSQL_USER=user'
+      - 'MYSQL_PASSWORD=secretpwd'
+      - 'MYSQL_ROOT_PASSWORD=verysecretpwd'
+    ports:
+      - "3308:3308"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-uuser",
+          "-psecretpwd",
+          "-h",
+          "localhost",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    container_name: PhpMyAdmin
+    links:
+      - mysql3
+    restart: always
+    ports:
+      - 5013:80
+    environment:
+      - PMA_ARBITRARY=1
