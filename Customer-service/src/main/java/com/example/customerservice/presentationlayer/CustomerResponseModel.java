@@ -2,6 +2,7 @@ package com.example.customerservice.presentationlayer;
 
 import com.example.customerservice.datalayer.PhoneNumberInformation;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
@@ -11,6 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@Builder
 public class CustomerResponseModel extends RepresentationModel<CustomerResponseModel> {
 
     private String customerId;
@@ -23,4 +25,6 @@ public class CustomerResponseModel extends RepresentationModel<CustomerResponseM
     private String country;
     private String postalCode;
     private List<PhoneNumberInformation> phoneNumbers;
+
+
 }

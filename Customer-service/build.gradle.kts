@@ -2,7 +2,9 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
+
 }
+
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
@@ -22,6 +24,10 @@ repositories {
 }
 
 dependencies {
+
+    implementation("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -41,10 +47,8 @@ dependencies {
     implementation("org.springframework.integration:spring-integration-http")
     implementation("org.springframework.integration:spring-integration-jpa")
 
-
-// https://mvnrepository.com/artifact/org.mapstruct/mapstruct
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
-// https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor
+
     implementation("org.mapstruct:mapstruct-processor:1.5.5.Final")
     compileOnly ("org.mapstruct:mapstruct-processor:1.5.5.Final")
     annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
