@@ -1,9 +1,8 @@
 package com.example.customerservice.presentationlayer;
 
-import com.example.customerservice.datalayer.Customer;
-import com.example.customerservice.datalayer.CustomerRepository;
-import com.example.customerservice.datalayer.PhoneNumberInformation;
-import com.example.customerservice.datalayer.PhoneNumberType;
+import com.example.customerservice.datalayer.*;
+import org.hibernate.annotations.processing.SQL;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +21,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles("h2")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class CustomerControllerIntegrationTest {
+
+public class CustomerControllerIntegrationTest {
 
     private final String BASE_URI_CUSTOMERS = "/api/v1/customers";
     private final String FOUND_CUSTOMERS_ID = "7f5cf6c6-031b-4e5b-bb28-f83b0b7c57b0";
@@ -30,8 +30,8 @@ class CustomerControllerIntegrationTest {
     private final String FOUND_CUSTOMER_FIRST_NAME = "John";
     private final String FOUND_CUSTOMER_LAST_NAME = "Doe";
 
-    private final String NOT_FOUND_CUSTOMER_ID = "05c8ab76-4f75-45c1-b6e2-aa8e91488888";
-    private final String INVALID_CUSTOMER_ID = "05c8ab76-4f75-45c1-b6e2";
+    private final String NOT_FOUND_CUSTOMER_ID = "7f5cf6c6-031b-6e4c-yt23-f83b0b7c57b0";
+
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -40,9 +40,12 @@ class CustomerControllerIntegrationTest {
     private WebTestClient webTestClient;
 
     @Test
+    //@SQL("src\\main\\resources\\data-h2.sql")
     public void whenGetCustomers_thenReturnAllCustomers() {
         //arrange
         Long sizeDataBase = customerRepository.count();
+
+        System.out.println("This is the size of the data base:" + sizeDataBase);
         //count the number of customers in the database
 
         //act and assert
@@ -53,7 +56,7 @@ class CustomerControllerIntegrationTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)//return type is json
                 .expectBodyList(CustomerResponseModel.class)//expect the return of a list
-                .value((list) ->{
+                .value((list) -> {
                     //assert
                     assertNotNull(list); //always check if the value expected is not null
                     assertTrue(list.size() == sizeDataBase); //check if the size of the list is the same as the size of the database
@@ -61,10 +64,11 @@ class CustomerControllerIntegrationTest {
     }
 
     @Test
-    public void whenGetCustomerById_thenReturnCustomer() { //Not working
+    public void whenGetCustomerById_thenReturnCustomer() {
         //arrange
         Customer customer = customerRepository.findByCustomerIdentifier_CustomerId(FOUND_CUSTOMERS_ID);
 
+        System.out.println(BASE_URI_CUSTOMERS + "/" + FOUND_CUSTOMERS_ID);
         //act and assert
         webTestClient.get()
                 .uri(BASE_URI_CUSTOMERS + "/" + FOUND_CUSTOMERS_ID)//what is the uri?
@@ -74,7 +78,7 @@ class CustomerControllerIntegrationTest {
                 //-------------404 not found
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)//return type is json
                 .expectBody(CustomerResponseModel.class)//expect the return of a list
-                .value((response) ->{
+                .value((response) -> {
                     //assert
                     assertNotNull(response); //always check if the value expected is not null
                     assertEquals(response.getCustomerId(), FOUND_CUSTOMERS_ID);
@@ -93,9 +97,8 @@ class CustomerControllerIntegrationTest {
                 .expectStatus().isNotFound()
                 .expectBody()
                 .jsonPath("$.httpStatus").isEqualTo("NOT_FOUND")
-                .jsonPath("$.message").isEqualTo("Unknown customerId: " + NOT_FOUND_CUSTOMER_ID); //same message as in serviceimpl
+                .jsonPath("$.message").isEqualTo("Unknown customer id: " + NOT_FOUND_CUSTOMER_ID); //same message as in serviceimpl
     }
-
 
 
     @Test
@@ -117,7 +120,7 @@ class CustomerControllerIntegrationTest {
                 .bodyValue(customerRequestModel)
                 .exchange()
                 .expectStatus().isCreated()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectHeader().contentType(MediaType.parseMediaType("application/hal+json"))
                 .expectBody(CustomerResponseModel.class)
                 .value((customerResponseModel) -> {
                     assertNotNull(customerResponseModel);
@@ -157,7 +160,7 @@ class CustomerControllerIntegrationTest {
                 .bodyValue(customerRequestModel)
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectHeader().contentType(MediaType.parseMediaType("application/hal+json"))
                 .expectBody(CustomerResponseModel.class)
                 .value((customerResponseModel) -> {
                     assertNotNull(customerResponseModel);
@@ -195,7 +198,7 @@ class CustomerControllerIntegrationTest {
                 .expectStatus().isNotFound()
                 .expectBody()
                 .jsonPath("$.httpStatus").isEqualTo("NOT_FOUND")
-                .jsonPath("$.message").isEqualTo("No Customer found with ID: " + NOT_FOUND_CUSTOMER_ID);
+                .jsonPath("$.message").isEqualTo("Unknown customerId: " + NOT_FOUND_CUSTOMER_ID);
 
     }
 
@@ -223,14 +226,9 @@ class CustomerControllerIntegrationTest {
                 .expectStatus().isNotFound()
                 .expectBody()
                 .jsonPath("$.httpStatus").isEqualTo("NOT_FOUND")
-                .jsonPath("$.message").isEqualTo("No Customer found with: " + NOT_FOUND_CUSTOMER_ID);
+                .jsonPath("$.message").isEqualTo("Unknown customerId: " + NOT_FOUND_CUSTOMER_ID);
     }
 
-
-
-
-
-
-
-
 }
+
+

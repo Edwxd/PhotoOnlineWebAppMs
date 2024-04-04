@@ -78,7 +78,7 @@ public class CustomerControllerUnitTest {
 
 
     @Test
-    public void whenMemberExists_thenAddMember() {  //test to add a customer
+    public void whenMemberExists_thenAddCustomer() {  //test to add a customer
         //arrange
         CustomerRequestModel customerRequestModel = buildCustomerRequestModel("Emma");
         CustomerResponseModel customerResponseModel = buildCustomerResponseModel("Emma");

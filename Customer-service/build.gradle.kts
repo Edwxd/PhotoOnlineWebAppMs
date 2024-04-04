@@ -50,25 +50,26 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
 
     implementation("org.mapstruct:mapstruct-processor:1.5.5.Final")
-    compileOnly ("org.mapstruct:mapstruct-processor:1.5.5.Final")
-    annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
-    annotationProcessor ("org.projectlombok:lombok")
-    annotationProcessor ("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-    testAnnotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
+    compileOnly("org.mapstruct:mapstruct-processor:1.5.5.Final")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+    annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-}
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-tasks.test {
-    testLogging {
-        events("passed", "skipped", "failed")
-        showExceptions = true
-        showStackTraces = true
-        showStandardStreams = true
     }
-}
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
+
+    tasks.test {
+        testLogging {
+            events("passed", "skipped", "failed")
+            showExceptions = true
+            showStackTraces = true
+            showStandardStreams = true
+        }
+    }
+
 
