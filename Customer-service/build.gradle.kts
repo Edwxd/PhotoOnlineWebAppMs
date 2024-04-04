@@ -55,6 +55,8 @@ dependencies {
     annotationProcessor ("org.projectlombok:lombok")
     annotationProcessor ("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     testAnnotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
 }
 
 tasks.withType<Test> {
