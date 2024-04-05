@@ -71,12 +71,13 @@ spring:
             enabled: true
     jpa:
         hibernate:
-            ddl-auto: create
+            ddl-auto: create-drop
         properties:
             hibernate:
                 auto-quote-keyword: true
                 dialect: org.hibernate.dialect.H2Dialect
         show-sql: true
+        defer-datasource-initialization: true
     sql:
         init:
             mode: always

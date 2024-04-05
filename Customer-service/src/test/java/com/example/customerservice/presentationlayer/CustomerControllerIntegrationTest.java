@@ -45,7 +45,7 @@ public class CustomerControllerIntegrationTest {
         //arrange
         Long sizeDataBase = customerRepository.count();
 
-        System.out.println("This is the size of the data base:" + sizeDataBase);
+        //System.out.println("This is the size of the data base:" + sizeDataBase);
         //count the number of customers in the database
 
         //act and assert

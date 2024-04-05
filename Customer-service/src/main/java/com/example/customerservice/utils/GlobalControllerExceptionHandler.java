@@ -1,7 +1,5 @@
 package com.example.customerservice.utils;
 
-import com.example.customerservice.utils.exceptions.InUseException;
-import com.example.customerservice.utils.exceptions.InvalidInputException;
 import com.example.customerservice.utils.exceptions.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 
 @Slf4j
 @RestControllerAdvice
@@ -33,15 +30,6 @@ public class GlobalControllerExceptionHandler {
         return createHttpErrorInfo(HttpStatus.NOT_FOUND, request, exception);
     }
 
-    @ResponseStatus(UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(InUseException.class)
-    public HttpErrorInfo handleInUseException(WebRequest request, Exception exception){
-        return createHttpErrorInfo(UNPROCESSABLE_ENTITY, request, exception);
-    }
 
-    @ResponseStatus(UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(InvalidInputException.class)
-    public HttpErrorInfo handleInvalidInputException(WebRequest request, Exception exception){
-        return createHttpErrorInfo(UNPROCESSABLE_ENTITY, request, exception);
-    }
+
 }

@@ -1,14 +1,12 @@
 package com.example.photoservice.presentationlayer;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode(callSuper = false)
 
 public class PhotoResponseModel extends RepresentationModel<PhotoResponseModel> {

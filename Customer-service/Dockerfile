@@ -1,7 +1,7 @@
 FROM gradle:7.5 as builder
 WORKDIR /usr/src/app
 COPY ../src ./src
-COPY ../build.gradle.kts .
+COPY ../build.gradle .
 RUN ["gradle", "bootJar"]
 
 EXPOSE 7002

@@ -30,7 +30,7 @@ public interface CustomerResponseMapper {
     List<CustomerResponseModel> entityListToResponseModelList(List<Customer> customers);
 
 
-    @AfterMapping
+/*    @AfterMapping
     default void addLinks(@MappingTarget CustomerResponseModel customerModel, Customer customer){
 
         Link selfLink = linkTo(methodOn(CustomerController.class).getCustomerByCustomerId(customerModel.getCustomerId()))
@@ -43,4 +43,5 @@ public interface CustomerResponseMapper {
         customerModel.add(allCustomersLink);
     }
 
+}*/
 }

@@ -5,19 +5,15 @@ import com.example.customerservice.busnesslayer.CustomerService;
 
 import com.example.customerservice.datalayer.PhoneNumberInformation;
 import com.example.customerservice.datalayer.PhoneNumberType;
-import com.example.customerservice.utils.exceptions.InvalidInputException;
-import com.example.customerservice.utils.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -27,9 +23,6 @@ public class CustomerControllerUnitTest {
 
 
     private final String VALID_CUSTOMER_ID = "7f5cf6c6-031b-4e5b-bb28-f83b0b7c57b0";
-    private final String NOT_FOUND_CUSTOMER_ID = "6l2cf6c6-031b-4e5b-bb28-f83b0b7c57b0";
-
-    private final String INVALID_CUSTOMER_ID = "7f5cf6c6-031b-4e5b-bb28-f83b0b7c57b";
 
     @Autowired CustomerController customerController;
 
@@ -106,7 +99,8 @@ public class CustomerControllerUnitTest {
         when(customerService.updateCustomer(customerRequestModel, VALID_CUSTOMER_ID)).thenReturn(customerResponseModel);
 
         //act
-        ResponseEntity<CustomerResponseModel> customerResponseEntity = customerController.updateCustomer(customerRequestModel, VALID_CUSTOMER_ID);
+        ResponseEntity<CustomerResponseModel> customerResponseEntity
+                = customerController.updateCustomer(customerRequestModel, VALID_CUSTOMER_ID);
 
         //assert
         assertNotNull(customerResponseEntity);
@@ -120,15 +114,13 @@ public class CustomerControllerUnitTest {
     @Test
     public void whenCustomerExist_thenUpdateCustomer(){ //test to update customer
 
+        //Arrange
         CustomerRequestModel customerRequestModel = buildCustomerRequestModel("Edward");
         CustomerResponseModel customerResponseModel = buildCustomerResponseModel("Edward");
 
         when(customerService.updateCustomer(customerRequestModel, String.valueOf(UUID.fromString(VALID_CUSTOMER_ID))))
                 .thenReturn(customerResponseModel);
 
-        //act
-        when(customerService.updateCustomer(customerRequestModel, String.valueOf(UUID.fromString(VALID_CUSTOMER_ID))))
-                .thenReturn(customerResponseModel);
 
      //act
      ResponseEntity<CustomerResponseModel> responseEntity =
