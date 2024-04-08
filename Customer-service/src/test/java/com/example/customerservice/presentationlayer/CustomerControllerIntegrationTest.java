@@ -75,7 +75,6 @@ public class CustomerControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)//web client is sending this type of media
                 .exchange()// actually send the request
                 .expectStatus().isOk()
-                //-------------404 not found
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)//return type is json
                 .expectBody(CustomerResponseModel.class)//expect the return of a list
                 .value((response) -> {
