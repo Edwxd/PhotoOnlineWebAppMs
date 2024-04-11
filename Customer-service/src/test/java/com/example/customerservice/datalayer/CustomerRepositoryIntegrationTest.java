@@ -75,7 +75,7 @@ public class CustomerRepositoryIntegrationTest {
     }
 
     @Test
-    public void whenMemberIdIsNull_ReturnNull() {
+    public void whenCustomerIdIsNull_ReturnNull() {
         //arrange
         Customer customer1 = new Customer("John", "Doe", "john@gmail.com",
                 new Address("12 Main St", "New York", "NY", "UnitedStates", "10001"),

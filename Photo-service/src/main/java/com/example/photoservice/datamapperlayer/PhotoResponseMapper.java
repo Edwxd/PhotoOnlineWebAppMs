@@ -24,7 +24,7 @@ public interface PhotoResponseMapper {
     PhotoResponseModel entityToResponseModel(Photo photo);
 
     List<PhotoResponseModel> enityListToResponseModelList(List<Photo> photos);
-
+/*
 
     @AfterMapping
     default void addLinks(@MappingTarget PhotoResponseModel photoModel, Photo photo){
@@ -36,6 +36,6 @@ public interface PhotoResponseMapper {
 
         Link allPhotosLink = linkTo(methodOn(PhotoController.class).getAllPhotos()).withRel("All Photos");
 
-        photoModel.add(allPhotosLink);
+        photoModel.add(allPhotosLink);*/
     }
-}
+

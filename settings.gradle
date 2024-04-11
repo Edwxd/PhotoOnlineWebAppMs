@@ -1,0 +1,5 @@
+include 'Customer-service'
+include 'Photo-service'
+include 'Delivery-service'
+//include 'Api-Gateway'
+//include 'Purchasing-service'
